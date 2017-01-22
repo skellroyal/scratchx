@@ -192,11 +192,11 @@
                     if( !connecting ) {
                     	socket.emit('update', info);
                         bginfo.innerHTML = url;
-                        bginfo.innerHTML = JSON.stringify(info, null, '\t')
-			//bginfo.innerHTML = info.vx;
-			//bginfo.innerHTML = info.vy;
-			//bginfo.innerHTML = info.vz;
-			//bginfo.innerHTML = info.lux; 
+                        //bginfo.innerHTML = JSON.stringify(info, null, '\t')
+			bginfo.innerHTML += info.vx;
+			bginfo.innerHTML += info.vy;
+			bginfo.innerHTML += info.vz;
+			bginfo.innerHTML += info.lux; 
                     }
                     lastTimestamp = timestamp;
                 }
