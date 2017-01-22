@@ -158,7 +158,9 @@
         // g-sensor
         var info = {
             vx: 0,
-            vy: 0
+            vy: 0,
+	    vz: 0,
+	    vl: ''
         };
         window.ondevicemotion = function(event) {
             info.vx = event.accelerationIncludingGravity.x || 0;  
@@ -171,9 +173,9 @@
         }
 		
 	// light sensor
-	//window.addEventListener('devicelight', function(event) {
-	//    info.vl = 'Sensor value: ' + event.value + ' lux';
-	//});
+	window.addEventListener('devicelight', function(event) {
+	    info.vl = 'Sensor value: ' + event.value + ' lux';
+	});
 
         // sender
         var senderClousure = function() {
