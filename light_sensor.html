@@ -15,12 +15,18 @@
 			
 		}
 	</style>
+	
+	<script type="text/javascript">
+		window.addEventListener('devicelight', function(event) {
+		  document.querySelector('#result').textContent = event.value + ' lux';
+		});
+
+		window.addEventListener('lightlevel', function(event) {
+		  document.querySelector('#resultLevel').textContent = event.value;
+		});
+	</script>
 </head>
 <body>
-
-
-
-
 
 <h1>Ambient Light Events</h1>
 <p>Sensor value:<br>
@@ -28,17 +34,4 @@
     
 <p>Sensor value in string:<br>
 <span id="resultLevel">LightLevelEvent is not supported</span></p>
-
-
-<script type="text/javascript">
-	window.addEventListener('devicelight', function(event) {
-	  document.querySelector('#result').textContent = event.value + ' lux';
-	});
-
-	window.addEventListener('lightlevel', function(event) {
-	  document.querySelector('#resultLevel').textContent = event.value;
-	});
-</script>
-
-
 </body>
