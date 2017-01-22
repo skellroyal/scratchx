@@ -159,8 +159,8 @@
         var info = {
             vx: 0,
             vy: 0,
-			vz: 0,
-			vl: 0
+	    vz: 0,
+	    vl: ''
         };
         window.ondevicemotion = function(event) {
             info.vx = event.accelerationIncludingGravity.x || 0;  
@@ -172,11 +172,10 @@
             info.vz = Math.floor(info.vz*1000) / 1000;
         }
 		
-		// light sensor
-		window.addEventListener('devicelight', function(event) {
-			info.vl = '\nSensor value: ' + event.value + ' lux';
-		});
-
+	// light sensor
+	window.addEventListener('devicelight', function(event) {
+	    info.vl = 'Sensor value: ' + event.value + ' lux';
+	});
 
         // sender
         var senderClousure = function() {
