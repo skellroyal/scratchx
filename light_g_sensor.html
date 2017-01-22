@@ -160,7 +160,7 @@
             vx: 0,
             vy: 0,
 	    vz: 0,
-	    vl: ''
+	    lux: ''
         };
         window.ondevicemotion = function(event) {
             info.vx = event.accelerationIncludingGravity.x || 0;  
@@ -174,7 +174,7 @@
 		
 	// light sensor
 	window.addEventListener('devicelight', function(event) {
-	    info.vl = 'Sensor value: ' + event.value + ' lux';
+	    info.lux = 'Sensor value: ' + event.value + ' lux';
 	});
 
         // sender
@@ -192,7 +192,11 @@
                     if( !connecting ) {
                     	socket.emit('update', info);
                         bginfo.innerHTML = url;
-                        bginfo.innerHTML = JSON.stringify(info, null, '\t')
+                        //bginfo.innerHTML = JSON.stringify(info, null, '\t')
+			bginfo.innerHTML = info.vx;
+			bginfo.innerHTML = info.vy;
+			bginfo.innerHTML = info.vz;
+			bginfo.innerHTML = info.lux; 
                     }
                     lastTimestamp = timestamp;
                 }
