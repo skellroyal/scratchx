@@ -193,10 +193,10 @@
                     	socket.emit('update', info);
                         bginfo.innerHTML = url;
                         //bginfo.innerHTML = JSON.stringify(info, null, '\t')
-			bginfo.innerHTML += info.vx;
-			bginfo.innerHTML += info.vy;
-			bginfo.innerHTML += info.vz;
-			bginfo.innerHTML += info.lux; 
+			bginfo.innerHTML += 'vx:' + info.vx + '\n';
+			bginfo.innerHTML += 'vy:' + info.vy  + '\n';
+			bginfo.innerHTML += 'vz:' + info.vz  + '\n';
+			bginfo.innerHTML += info.lux  + '\n'; 
                     }
                     lastTimestamp = timestamp;
                 }
