@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>Light sensor</title>
+	<style type="text/css">
+		body {
+			background: #000;
+			font-family: Helvetica, sans-serif;
+			color: #fff;
+		}
+		p {
+		   padding: 1em;
+		   border: 1px solid yellow;
+		}
+		#result {
+			
+		}
+	</style>
+</head>
+<body>
+
+
+
+
+
+<h1>Ambient Light Events</h1>
+<p>Sensor value:<br>
+<span id="result">AmbientLightEvent is not supported</span></p>
+    
+<p>Sensor value in string:<br>
+<span id="resultLevel">LightLevelEvent is not supported</span></p>
+
+
+<script type="text/javascript">
+	window.addEventListener('devicelight', function(event) {
+	  document.querySelector('#result').textContent = event.value + ' lux';
+	});
+
+	window.addEventListener('lightlevel', function(event) {
+	  document.querySelector('#resultLevel').textContent = event.value;
+	});
+</script>
+
+
+</body>
