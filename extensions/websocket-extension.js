@@ -19,4 +19,4 @@ new (function() {
             ScratchExtensions.register(name, descriptor, ext_);
         });
 
-})();
+})({});
