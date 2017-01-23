@@ -234,7 +234,7 @@ function ws_ext_init(ext, emitter) {
 
     // Send and receive
 
-    ext.send = function(data, _url) {
+    /*ext.send = function(data, _url) {
         let ws = ext.api.getConnection(_url);
         console.log("ext.send: %s, %s %o", _url, ws.url, data);
         ws.send(data);
@@ -258,7 +258,7 @@ function ws_ext_init(ext, emitter) {
         }
 
         return null; 
-    };
+    };*/
 
     /*ext.getLastReceivedMessageOrigin = function() {
         console.log("ext.getLastReceivedMessageOrigin");
