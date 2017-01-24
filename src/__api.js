@@ -94,6 +94,9 @@ function initServer(name, url, callback) {
 // Export api
 module.exports = {
     initServer: initServer,
+    disconnect: function() {
+        io.emit('disconnect');
+    },
     connectSuccess: function() {
         return io !== null? 1 : 0;
     },
