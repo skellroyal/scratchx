@@ -74,10 +74,10 @@ function initServer(name, url, callback) {
     var lastTimestamp = null;
     var requestID = null;
     function sender(timestamp) {
-        if( lastTimestamp===null )
+        if(lastTimestamp == null)
             lastTimestamp = timestamp;
-        if( timestamp-lastTimestamp > interval ) {
-            if( Object.keys(toBeUpdated).length > 0 ) {
+        if(timestamp-lastTimestamp > interval) {
+            if(Object.keys(toBeUpdated).length > 0) {
                 io.emit('update', toBeUpdated);
                 toBeUpdated = {};
             }
