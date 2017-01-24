@@ -12,6 +12,10 @@
     function initServer(name, url, callback) {
         api.initServer(name, url, callback);
     }
+    
+    function disconnect(url) {
+        api.disconnect(url);
+    }
 
     function connectSuccess() {
         return api.connectSuccess();
@@ -33,7 +37,8 @@
 
 
     // Scratch extentions
-    SXregister.add(initServer, 'w', '我叫 %s 連接至伺服器 %s', '某人', 'url');
+    SXregister.add(initServer, 'w', '我叫 %s , 連接至伺服器 %s', '某人', 'url');
+    SXregister.add(disconnect, ' ', '斷開與伺服器 %s 的連線', 'url');
     SXregister.add(connectSuccess, 'r', '成功連線');
     SXregister.add(update, ' ', '令 %s = %s', '屬性', '值');
     SXregister.add(subscribe, ' ', '訂閱 %s 的所有資訊', '某人');
