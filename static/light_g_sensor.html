@@ -185,11 +185,11 @@
             var lastTimestamp = null;
             var requestID = null;
             function sender(timestamp) {
-                if( lastTimestamp===null )
+                if(lastTimestamp == null)
                 	lastTimestamp = timestamp;
 
-                if( timestamp-lastTimestamp > interval ) {
-                    if( !connecting ) {
+                if(timestamp-lastTimestamp > interval) {
+                    if(!connecting) {
                     	socket.emit('update', info);
                         //bginfo.innerHTML = url;
 			bginfo.innerHTML = '';
