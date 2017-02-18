@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Light sensor</title>
+    <title>Light G sensor</title>
 
     <style type="text/css">
         * {
@@ -96,7 +96,7 @@
         </div>
         <div>
             <label for="ID">your device name</label>
-            <input id="ID" type="text" value="doris">
+            <input id="ID" type="text">
         </div>
         <button id="connect">Connect</button>
     </div>
@@ -110,9 +110,34 @@
             window.requestAnimationFrame = requestAnimationFrame;
         })();
     </script>
+    <script type="text/javascript">
+        var strUrl = location.search;
+        var getPara, ParaVal;
+        var aryPara = [];
+
+        if (strUrl.indexOf("?") != -1) {
+            var getSearch = strUrl.split("?");
+            getPara = getSearch[1].split("&");
+            for (i = 0; i < getPara.length; i++) {
+                ParaVal = getPara[i].split("=");
+                aryPara.push(ParaVal[0]);
+                aryPara[ParaVal[0]] = ParaVal[1];
+                //console.log(ParaVal[0] + " : " + ParaVal[1]);
+            }
+            //console.log(aryPara);
+            //alert(aryPara["device"]);
+        }
+    </script>
     <script>
 
-    document.getElementById('url').value = location.origin;
+    /* check cookie */
+
+    var ID = getCookie("ID");
+
+
+    //document.getElementById('url').value = location.origin;
+    document.getElementById('url').value = aryPara["url"];
+    document.getElementById('ID').value = ID;
     document.getElementById('connect').onclick = fireConnect;
 
     function fireConnect() {
@@ -120,7 +145,11 @@
         document.getElementById('panel').style.display = 'none';
 
         var url = document.getElementById('url').value;
-        var ID = document.getElementById('ID').value;
+        ID = document.getElementById('ID').value;
+
+        setCookie("url", url, 365);
+        setCookie("ID", ID, 365);
+        
         var connecting = true;
 
         document.getElementById('server-url').innerHTML = url;
@@ -133,12 +162,30 @@
 
         bginfo.innerHTML = 'Connecting to server...';
 
+        /* Check user device name is unique on the websocket server */
+        socket.on('check result', function(result) {
+            if (result == '1') {
+                alert("device name already been used!");
+                document.getElementById('panel').style.display = 'block';
+                document.getElementById('server-url').innerHTML = "";
+                document.getElementById('device-name').innerHTML = "";
+                socket.close();
+                bginfo.innerHTML = '';
+            } else {
+                bginfo.innerHTML = ''
+                connecting = false;
+                socket.emit('set name', ID);
+            }
+        });
+
         
         // Init
         socket.on('connect', function() {
-            bginfo.innerHTML = ''
-            connecting = false;
-            socket.emit('set name', ID);
+            //console.log("it's my:" + ID);
+            socket.emit('check user ID', ID);
+            //bginfo.innerHTML = ''
+            //connecting = false;
+            //socket.emit('set name', ID);
         });
         socket.on('reconnect', function() {
             bginfo.innerHTML = '';
@@ -159,8 +206,8 @@
         var info = {
             vx: 0,
             vy: 0,
-	    vz: 0,
-	    lux: ''
+	        vz: 0,
+	        lux: ''
         };
         window.ondevicemotion = function(event) {
             info.vx = event.accelerationIncludingGravity.x || 0;  
@@ -172,10 +219,10 @@
             info.vz = Math.floor(info.vz*1000) / 1000;
         }
 		
-	// light sensor
-	window.addEventListener('devicelight', function(event) {
-	    info.lux = 'Sensor value: ' + event.value + ' lux';
-	});
+    	// light sensor
+    	window.addEventListener('devicelight', function(event) {
+    	    info.lux = 'Sensor value: ' + event.value + ' lux';
+    	});
 
         // sender
         var senderClousure = function() {
@@ -192,12 +239,12 @@
                     if(!connecting) {
                     	socket.emit('update', info);
                         //bginfo.innerHTML = url;
-			bginfo.innerHTML = '';
+			            bginfo.innerHTML = '';
                         //bginfo.innerHTML = JSON.stringify(info, null, '\t')
-			bginfo.innerHTML += 'vx: ' + info.vx + '<br>';
-			bginfo.innerHTML += 'vy: ' + info.vy  + '<br>';
-			bginfo.innerHTML += 'vz: ' + info.vz  + '<br>';
-			bginfo.innerHTML += info.lux; 
+            			bginfo.innerHTML += 'vx: ' + info.vx + '<br>';
+            			bginfo.innerHTML += 'vy: ' + info.vy  + '<br>';
+            			bginfo.innerHTML += 'vz: ' + info.vz  + '<br>';
+            			bginfo.innerHTML += info.lux; 
                     }
                     lastTimestamp = timestamp;
                 }
@@ -210,6 +257,41 @@
             };
         }();
     }
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    /*function checkCookie(cname) {
+        var cv = getCookie(cname);
+        if (cv != "") {
+            return cv;
+            alert("Welcome again " + user);
+        } else {
+            user = prompt("Please enter your name:", "");
+            if (user != "" && user != null) {
+                setCookie("username", user, 365);
+            }
+        }
+    }*/
     </script>
 </body>
 </html>
