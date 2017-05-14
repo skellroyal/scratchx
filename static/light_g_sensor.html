@@ -177,14 +177,28 @@
 			document.getElementById('panel').style.display = 'none';
 
 			ID = document.getElementById('ID').value;
-
-			
 			
 			/* 呼叫ajax驗證使用者名稱 */
+			var values = {};
+			values['username')] = ID;
+			$.ajax({
+				url:'http://192.168.0.18/auth_user',
+				type : 'post',
+				data : values,
+				success : function(data) {
+					var json = JSON.parse(data);
+					console.log(json["isPassAuth"]);
+					
+					sendData();
+				},
+				error : function(e) {
+				}
+			});
 			
-			
-			
-			
+		}
+
+		
+		function sendData() {
 			setCookie("ID", ID, 365);
 			
 			var connecting = true;
@@ -293,8 +307,10 @@
 					return requestID;
 				};
 			}();
+		
 		}
-
+		
+		
 		/* 中斷MQTT連線 */
 		function disconnect() {
 		
@@ -323,6 +339,10 @@
 			}
 			return "";
 		}
+		
+		
+		
+		
 
 		/*function checkCookie(cname) {
 			var cv = getCookie(cname);
