@@ -83,26 +83,20 @@
 <body>
 
     <div class="mid-center">
-        <div id="server-url"></div>
-        <div id="device-name"></div>
+        <div id="userName"></div>
         <div id="bg-info"></div>
+		<button id="disconnect">Disconnect</button>
     </div>
 
     <div id="panel">
         <header>Connection setting</header>
         <div>
-            <label for="url">url</label>
-            <input id="url" type="text">
-        </div>
-        <div>
-            <label for="ID">your device name</label>
+            <label for="ID">Enter your username</label>
             <input id="ID" type="text">
         </div>
         <button id="connect">Connect</button>
     </div>
 
-    
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script type="text/javascript">
         (function() {
             var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -128,170 +122,220 @@
             //alert(aryPara["device"]);
         }
     </script>
-    <script>
+	<script src="mqttws31.js"></script>
+	<script>
+		const TOPIC = "mobile/"+ID+"/+";
+		const TOPIC_VX = "mobile/"+ID+"/vx";
+		const TOPIC_VY = "mobile/"+ID+"/vy";
+		const TOPIC_VZ = "mobile/"+ID+"/vz";
+		var client = false;
 
-    /* check cookie */
+		// 用戶端成功連接 broker 時...
+		function onConnect() {
+			// 確認連接後，才能訂閱主題
+			console.log("onConnect then subscribe topic");
+			client.subscribe(TOPIC);
+		}
 
-    var ID = getCookie("ID");
+		// 收到訊息時...
+		function onMessageArrived(message) {
+			console.log("onMessageArrived:"+message.payloadString);
+		}
 
+		// 發佈訊息
+		function publish_message(payload, topic) {
+			var message = new Paho.MQTT.Message(payload);
+			message.destinationName = topic;
+			client.send(message);
+		}
 
-    //document.getElementById('url').value = location.origin;
-    document.getElementById('url').value = aryPara["url"];
-    document.getElementById('ID').value = ID;
-    document.getElementById('connect').onclick = fireConnect;
+		function init() {
+			document.getElementById("mqtt_pub").addEventListener('click', publish_message);
+			// 建立 MQTT 用戶端實體. 你必須正確寫上你設置的埠號.
+			// ClientId 可以自行指定，提供 MQTT broker 認證用
+			client = new Paho.MQTT.Client("ws://192.168.0.18:11883/", ID);
 
-    function fireConnect() {
+			// 指定收到訊息時的處理動作
+			client.onMessageArrived = onMessageArrived;
 
-        document.getElementById('panel').style.display = 'none';
-
-        var url = document.getElementById('url').value;
-        ID = document.getElementById('ID').value;
-
-        setCookie("url", url, 365);
-        setCookie("ID", ID, 365);
-        
-        var connecting = true;
-
-        document.getElementById('server-url').innerHTML = url;
-        document.getElementById('device-name').innerHTML = ID;
-
-        console.log(url);
-        console.log(ID);
-        var socket = io(url);
-        var bginfo = document.getElementById('bg-info');
-
-        bginfo.innerHTML = 'Connecting to server...';
-
-        /* Check user device name is unique on the websocket server */
-        socket.on('check result', function(result) {
-            if (result == '1') {
-                alert("device name already been used!");
-                document.getElementById('panel').style.display = 'block';
-                document.getElementById('server-url').innerHTML = "";
-                document.getElementById('device-name').innerHTML = "";
-                socket.close();
-                bginfo.innerHTML = '';
-            } else {
-                bginfo.innerHTML = ''
-                connecting = false;
-                socket.emit('set name', ID);
-            }
-        });
-
-        
-        // Init
-        socket.on('connect', function() {
-            //console.log("it's my:" + ID);
-            socket.emit('check user ID', ID);
-            //bginfo.innerHTML = ''
-            //connecting = false;
-            //socket.emit('set name', ID);
-        });
-        socket.on('reconnect', function() {
-            bginfo.innerHTML = '';
-            connecting = false;
-            socket.emit('set name', ID);
-        })
-        socket.on('disconnect', function() {
-            bginfo.innerHTML = 'Disconnect';
-            connecting = true;
-        });
-        socket.on('reconnect_attempt', function() {
-            bginfo.innerHTML = 'Reconnecting to server...';
-            connecting = true;
-        });
-
-
-        // g-sensor
-        var info = {
-            vx: 0,
-            vy: 0,
-	        vz: 0,
-	        lux: ''
-        };
-        window.ondevicemotion = function(event) {
-            info.vx = event.accelerationIncludingGravity.x || 0;  
-            info.vy = event.accelerationIncludingGravity.y || 0;
-            info.vz = event.accelerationIncludingGravity.z || 0;
-
-            info.vx = Math.floor(info.vx*1000) / 1000;
-            info.vy = Math.floor(info.vy*1000) / 1000;
-            info.vz = Math.floor(info.vz*1000) / 1000;
-        }
+			// 連接 MQTT broker
+			client.connect({onSuccess:onConnect});
+		}
 		
-    	// light sensor
-    	window.addEventListener('devicelight', function(event) {
-    	    info.lux = 'Sensor value: ' + event.value + ' lux';
-    	});
+		window.addEventListener('load', init, false);
+	</script>
+    <script>
+		/* check cookie */
+		var ID = getCookie("ID");
 
-        // sender
-        var senderClousure = function() {
-            var fps = 30;
-            var interval = 1000 / fps;
-            
-            var lastTimestamp = null;
-            var requestID = null;
-            function sender(timestamp) {
-                if(lastTimestamp == null)
-                	lastTimestamp = timestamp;
+		document.getElementById('ID').value = ID;
+		document.getElementById('connect').onclick = fireConnect;
+		document.getElementById('disconnect').onclick = disconnect;
 
-                if(timestamp-lastTimestamp > interval) {
-                    if(!connecting) {
-                    	socket.emit('update', info);
-                        //bginfo.innerHTML = url;
-			            bginfo.innerHTML = '';
-                        //bginfo.innerHTML = JSON.stringify(info, null, '\t')
-            			bginfo.innerHTML += 'vx: ' + info.vx + '<br>';
-            			bginfo.innerHTML += 'vy: ' + info.vy  + '<br>';
-            			bginfo.innerHTML += 'vz: ' + info.vz  + '<br>';
-            			bginfo.innerHTML += info.lux; 
-                    }
-                    lastTimestamp = timestamp;
-                }
-                requestID = requestAnimationFrame(sender);
-            }
-            
-            requestID = requestAnimationFrame(sender);
-            return function() {
-            	return requestID;
-            };
-        }();
-    }
+		function fireConnect() {
 
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires="+d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
+			document.getElementById('panel').style.display = 'none';
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
+			ID = document.getElementById('ID').value;
 
-    /*function checkCookie(cname) {
-        var cv = getCookie(cname);
-        if (cv != "") {
-            return cv;
-            alert("Welcome again " + user);
-        } else {
-            user = prompt("Please enter your name:", "");
-            if (user != "" && user != null) {
-                setCookie("username", user, 365);
-            }
-        }
-    }*/
+			
+			
+			/* 呼叫ajax驗證使用者名稱 */
+			
+			
+			
+			
+			setCookie("ID", ID, 365);
+			
+			var connecting = true;
+
+			document.getElementById('userName').innerHTML = ID;
+
+			console.log(ID);
+			var bginfo = document.getElementById('bg-info');
+
+			bginfo.innerHTML = 'Connecting to server...';
+
+			/* Check user device name is unique on the websocket server */
+			/*socket.on('check result', function(result) {
+				if (result == '1') {
+					alert("device name already been used!");
+					document.getElementById('panel').style.display = 'block';
+					document.getElementById('userName').innerHTML = "";
+					socket.close();
+					bginfo.innerHTML = '';
+				} else {
+					bginfo.innerHTML = ''
+					connecting = false;
+					socket.emit('set name', ID);
+				}
+			});
+			
+			// Init
+			socket.on('connect', function() {
+				//console.log("it's my:" + ID);
+				socket.emit('check user ID', ID);
+				//bginfo.innerHTML = ''
+				//connecting = false;
+				//socket.emit('set name', ID);
+			});
+			socket.on('reconnect', function() {
+				bginfo.innerHTML = '';
+				connecting = false;
+				socket.emit('set name', ID);
+			})
+			socket.on('disconnect', function() {
+				bginfo.innerHTML = 'Disconnect';
+				connecting = true;
+			});
+			socket.on('reconnect_attempt', function() {
+				bginfo.innerHTML = 'Reconnecting to server...';
+				connecting = true;
+			});*/
+
+
+			// g-sensor
+			var info = {
+				vx: 0,
+				vy: 0,
+				vz: 0,
+				lux: ''
+			};
+			window.ondevicemotion = function(event) {
+				info.vx = event.accelerationIncludingGravity.x || 0;  
+				info.vy = event.accelerationIncludingGravity.y || 0;
+				info.vz = event.accelerationIncludingGravity.z || 0;
+
+				info.vx = Math.floor(info.vx*1000) / 1000;
+				info.vy = Math.floor(info.vy*1000) / 1000;
+				info.vz = Math.floor(info.vz*1000) / 1000;
+			}
+			
+			// light sensor
+			window.addEventListener('devicelight', function(event) {
+				info.lux = 'Sensor value: ' + event.value + ' lux';
+			});
+
+			// sender
+			var senderClousure = function() {
+				var fps = 30;
+				var interval = 1000 / fps;
+				
+				var lastTimestamp = null;
+				var requestID = null;
+				function sender(timestamp) {
+					if(lastTimestamp == null)
+						lastTimestamp = timestamp;
+
+					if(timestamp-lastTimestamp > interval) {
+						if(!connecting) {
+							
+							//socket.emit('update', info); // 改成mqtt publish
+							publish_message(info.vx, TOPIC_VX);
+							publish_message(info.vy, TOPIC_VY);
+							publish_message(info.vz, TOPIC_VZ);
+							
+							//bginfo.innerHTML = url;
+							bginfo.innerHTML = '';
+							//bginfo.innerHTML = JSON.stringify(info, null, '\t')
+							bginfo.innerHTML += 'vx: ' + info.vx + '<br>';
+							bginfo.innerHTML += 'vy: ' + info.vy  + '<br>';
+							bginfo.innerHTML += 'vz: ' + info.vz  + '<br>';
+							bginfo.innerHTML += info.lux; 
+						}
+						lastTimestamp = timestamp;
+					}
+					requestID = requestAnimationFrame(sender);
+				}
+				
+				requestID = requestAnimationFrame(sender);
+				return function() {
+					return requestID;
+				};
+			}();
+		}
+
+		/* 中斷MQTT連線 */
+		function disconnect() {
+		
+		
+		
+		}
+		
+		function setCookie(cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			var expires = "expires="+d.toUTCString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		}
+
+		function getCookie(cname) {
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+
+		/*function checkCookie(cname) {
+			var cv = getCookie(cname);
+			if (cv != "") {
+				return cv;
+				alert("Welcome again " + user);
+			} else {
+				user = prompt("Please enter your name:", "");
+				if (user != "" && user != null) {
+					setCookie("username", user, 365);
+				}
+			}
+		}*/
     </script>
 </body>
 </html>
