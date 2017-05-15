@@ -1,11 +1,11 @@
 (function(ext) {
-
+    
     function loadMQTT() {
-    $.getScript('http://sisomm.github.io/scratch-skull-extension/mqttws31.js')
-          .done(function(script, textStatus) {
+        $.getScript('http://sisomm.github.io/scratch-skull-extension/mqttws31.js')
+        .done(function(script, textStatus) {
             console.log('Loaded MQTT');
-          })
-          .fail(function(jqxhr, settings, exception) {
+        })
+        .fail(function(jqxhr, settings, exception) {
             console.log('Error loading MQTT');
         });
     }
