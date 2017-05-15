@@ -4,13 +4,12 @@
         $.getScript('http://sisomm.github.io/scratch-skull-extension/mqttws31.js')
         .done(function(script, textStatus) {
             console.log('Loaded MQTT');
+            connectMQTT();
         })
         .fail(function(jqxhr, settings, exception) {
             console.log('Error loading MQTT');
         });
     }
-    //var mqtt = require('mqtt');
-    //var $ = require('jquery');
     
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {};
@@ -54,47 +53,49 @@
     ScratchExtensions.register('Face Tracker', descriptor, ext);
     loadMQTT();
     
-
+    
     // Face tracker variables
     var faceTrackX=0;
     var faceTrackY=0;
 
-    // MQTT connection details
-    //var client  = mqtt.connect("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
-    var client = new Paho.MQTT.Client("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
-    var mqqtDefaultTopic="scratch/sisomm";
-    
-    client.onConnectionLost = function (responseObject) {
-        console.log("connection lost: " + responseObject.errorMessage);
-        setTimeout(client.connect(),100);
-    };
-    
-    client.onMessageArrived = function (message) {
-        console.log(message.destinationName, ' -- ', message.payloadString);
-        var parts = message.payloadString.split(",");
-        faceTrackX = parseInt(parts[0]);
-        faceTrackY = parseInt(parts[1]);
-    };
-    
-    var options = {
-      timeout: 3,
-      onSuccess: function () {
-        console.log("mqtt connected");
-        // Connection succeeded; subscribe to our topic, you can add multile lines of these
-        client.subscribe("raspberry/1/face/1", {qos: 0});
-    
-        //use the below if you want to publish to a topic on connect
-        client.publish("scratch/sisomm", "Hello");
-  
-      },
-      onFailure: function (message) {
-        console.log("Connection failed: " + message.errorMessage);
-      }
-    };
-      
+    var client = null;
+    function connectMQTT() {
+        // MQTT connection details
+        //var client  = mqtt.connect("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
+        client = new Paho.MQTT.Client("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
+        var mqqtDefaultTopic="scratch/sisomm";
 
-    client.connect(options);
+        client.onConnectionLost = function (responseObject) {
+            console.log("connection lost: " + responseObject.errorMessage);
+            setTimeout(client.connect(),100);
+        };
 
+        client.onMessageArrived = function (message) {
+            console.log(message.destinationName, ' -- ', message.payloadString);
+            var parts = message.payloadString.split(",");
+            faceTrackX = parseInt(parts[0]);
+            faceTrackY = parseInt(parts[1]);
+        };
 
+        var options = {
+          timeout: 3,
+          onSuccess: function () {
+            console.log("mqtt connected");
+            // Connection succeeded; subscribe to our topic, you can add multile lines of these
+            client.subscribe("raspberry/1/face/1", {qos: 0});
 
+            //use the below if you want to publish to a topic on connect
+            message = new Paho.MQTT.Message('Hello');
+            message.destinationName = "scratch/sisomm";
+            client.send(message);
+
+          },
+          onFailure: function (message) {
+            console.log("Connection failed: " + message.errorMessage);
+          }
+        };
+
+        client.connect(options);
+    
+    }
 })({});
