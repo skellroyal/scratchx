@@ -1,7 +1,16 @@
 (function(ext) {
 
-    var mqtt = require('mqtt');
-    var $ = require('jquery');
+    function loadMQTT() {
+    $.getScript('http://sisomm.github.io/scratch-skull-extension/mqttws31.js')
+          .done(function(script, textStatus) {
+            console.log('Loaded MQTT');
+          })
+          .fail(function(jqxhr, settings, exception) {
+            console.log('Error loading MQTT');
+        });
+    }
+    //var mqtt = require('mqtt');
+    //var $ = require('jquery');
     
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {};
@@ -50,7 +59,8 @@
     var faceTrackY=0;
 
     // MQTT connection details
-    var client  = mqtt.connect("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
+    //var client  = mqtt.connect("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
+    var client = new Paho.MQTT.Client("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
     var mqqtDefaultTopic="scratch/sisomm";
     
     client.onConnectionLost = function (responseObject) {
