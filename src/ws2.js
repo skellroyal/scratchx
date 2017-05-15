@@ -52,6 +52,7 @@
 
     // Register the extension
     ScratchExtensions.register('Face Tracker', descriptor, ext);
+    loadMQTT();
     
 
     // Face tracker variables
