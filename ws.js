@@ -147,7 +147,7 @@
     function connectMQTT() {
         // MQTT connection details
         //var client  = mqtt.connect("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
-        client = new Paho.MQTT.Client("ws://192.168.2.109:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
+        client = new Paho.MQTT.Client("ws://192.168.2.119:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
         var mqqtDefaultTopic="scratch/sisomm";
 
         client.onConnectionLost = function (responseObject) {
