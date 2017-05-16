@@ -1,7 +1,7 @@
 (function(ext) {
     
     function loadMQTT() {
-        $.getScript('http://192.168.2.109:8080/SEIoT/js/mqttws31.js')
+        $.getScript('http://140.113.216.245:8080/SEIoT/js/mqttws31.js')
         .done(function(script, textStatus) {
             console.log('Loaded MQTT');
             connectMQTT();
@@ -35,7 +35,7 @@
     	values['username'] = username;
     	console.log(username);
     	$.ajax({
-    		url:'http://192.168.2.109:8080/SEIoT/auth_user',
+    		url:'http://140.113.216.245:8080/SEIoT/auth_user',
     		type : 'post',
     		data : values,
     		success : function(data) {
@@ -76,7 +76,7 @@
     	values['metric_name'] = metric;
     	console.log(values);
     	$.ajax({
-    		url:'http://192.168.2.109:8080/SEIoT/actuator',
+    		url:'http://140.113.216.245:8080/SEIoT/actuator',
     		type : 'post',
     		data : values,
     		success : function(data) {
@@ -147,7 +147,7 @@
     function connectMQTT() {
         // MQTT connection details
         //var client  = mqtt.connect("ws://192.168.2.117:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
-        client = new Paho.MQTT.Client("ws://192.168.2.119:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
+        client = new Paho.MQTT.Client("ws://140.113.216.245:11883/", "myclientid_" + parseInt(Math.random() * 100, 10));
         var mqqtDefaultTopic="scratch/sisomm";
 
         client.onConnectionLost = function (responseObject) {
