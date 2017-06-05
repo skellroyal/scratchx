@@ -69,6 +69,7 @@
     		url:'http://' + url + ':8080/SEIoT/auth_user',
     		type : 'post',
     		data : values,
+		dataType: 'jsonp',
     		success : function(data) {
     			var json = JSON.parse(data);
     			if (json[0]["isPassAuth"] == "1") { //通過身分驗證
