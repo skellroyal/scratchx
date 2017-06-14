@@ -51,8 +51,8 @@
     var isPassAuth = false; //是否通過身分驗證
     var isConnected = false; //是否連線到MQTT Broker
     var regexpChar = /^([0-9a-zA-Z])+$/, regexpWild = /^([0-9a-zA-Z/#+])+$/;
-    var url = "220.135.86.47";
-    var broker_url = "220.135.86.47";
+    var url = "140.113.216.245";
+    var broker_url = "140.113.216.245";
     var username, hashedPass;
     
     /* 連線到系統驗證使用者身分 */
