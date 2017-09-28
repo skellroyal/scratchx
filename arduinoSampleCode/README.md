@@ -43,10 +43,10 @@ Arduino的範例程式碼區塊如下所示：
 2. 變數 ssid 填入欲連線無線網路之SSID名稱
    變數 pass 填入欲連線無線網路之密碼
    
-3. /``* Define sensor / actuator pin and library Start *``/ 區塊
+3. /\* Define sensor / actuator pin and library Start \*/ 區塊
    修改連接的裝置對應之PIN腳號碼
 
-4. /``* defines and variable for sensor/control mode [Start] *``/ 區塊
+4. /\* defines and variable for sensor/control mode [Start] \*/ 區塊
    定義變數或switch case，例：
     #define LEDW_OFF 0  // White LED off
     #define LEDW_ON 1  // White LED on
