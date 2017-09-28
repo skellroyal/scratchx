@@ -48,32 +48,32 @@ Arduino的範例程式碼區塊如下所示：
    
 4. /\* defines and variable for sensor/control mode [Start] \*/ 區塊  
    定義變數或switch case，例：  
-   ```javascript
-   #define LEDW_OFF 0  // White LED off
-   #define LEDW_ON 1  // White LED on
-   #define LEDR_OFF 2  // Red LED off
-   #define LEDR_ON 3  // Red LED on
-   int ledCase = -1;
-   ```
+   ```javascript  
+   #define LEDW_OFF 0  // White LED off  
+   #define LEDW_ON 1  // White LED on  
+   #define LEDR_OFF 2  // Red LED off  
+   #define LEDR_ON 3  // Red LED on  
+   int ledCase = -1;  
+   ```  
 
-5. /\* Initialize sensor/control object [Start] \*/ 區塊
-   初始化裝置物件，例：
-   ```javascript
-   DHT dht(DHTPIN, DHTTYPE);  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)
-   ```
+5. /\* Initialize sensor/control object [Start] \*/ 區塊  
+   初始化裝置物件，例：  
+   ```javascript  
+   DHT dht(DHTPIN, DHTTYPE);  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)  
+   ```  
 
-6. /\* initialize sensor and actuator [Start] \*/ 區塊
-   初始化裝置，例：
-   ```javascript
-   dht.begin();  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)
-   ```
+6. /\* initialize sensor and actuator [Start] \*/ 區塊  
+   初始化裝置，例：  
+   ```javascript  
+   dht.begin();  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)  
+   ```  
 
-7. /\* Process received topic / message and set sensor/control mode [Start] \*/ 區塊
-   根據接收到的訊息topic和message內容設定對應的switch case，例：
-   我們分別定義了紅光LED和白光LED的主題，在接收到對應主題的訊息後，進一步查看訊息的內容為1或0。
-   若是白光LED主題且訊息內容為1，則會把ledCase設為LEDW_ON(其值為1)，當loop()函式內判斷switch case時，就會進入開啟白光LED的case，並由Arduino控制將白光LED打開。
-   ```javascript
-   if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {
+7. /\* Process received topic / message and set sensor/control mode [Start] \*/ 區塊  
+   根據接收到的訊息topic和message內容設定對應的switch case，例：  
+   我們分別定義了紅光LED和白光LED的主題，在接收到對應主題的訊息後，進一步查看訊息的內容為1或0。  
+   若是白光LED主題且訊息內容為1，則會把ledCase設為LEDW_ON(其值為1)，當loop()函式內判斷switch case時，就會進入開啟白光LED的case，並由Arduino控制將白光LED打開。  
+   ```javascript  
+   if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {  
       ledCase = LEDW_OFF;
    } else if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '1') {
       ledCase = LEDW_ON;
@@ -84,9 +84,9 @@ Arduino的範例程式碼區塊如下所示：
    }
    ```
 
-8. /\* Set actuator status according to sensor/control mode [Start] \*/ 區塊
-   根據switch case設定致動器，例：
-   假設ledCase被設成1，則會進入第2個case，由Arduino控制將白光LED打開。
+8. /\* Set actuator status according to sensor/control mode [Start] \*/ 區塊  
+   根據switch case設定致動器，例：  
+   假設ledCase被設成1，則會進入第2個case，由Arduino控制將白光LED打開。  
    ```javascript
    switch (ledCase) {
       case LEDW_OFF:
@@ -108,15 +108,15 @@ Arduino的範例程式碼區塊如下所示：
    }
    ```
 
-9. /\* Reading sensor data [Start] \*/ 區塊
-   讀取感測器的數值，例：
+9. /\* Reading sensor data [Start] \*/ 區塊  
+   讀取感測器的數值，例：  
    ```javascript
    float t = dht.readTemperature();
    float h = dht.readHumidity();
    ```
 
-10./* Publish sensor data to sensor topics [Start] */ 區塊
-   發送感測器的值到對應的主題，例：
+10./\* Publish sensor data to sensor topics [Start] \*/ 區塊  
+   發送感測器的值到對應的主題，例：  
    ```javascript
    client.publish(DHT11_TEMP_TOPIC, attributes);
    ```
