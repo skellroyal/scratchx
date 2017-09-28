@@ -6,17 +6,17 @@ Source: https://store.arduino.cc/usa/arduino-yun*/-->
 Arduino的範例程式碼區塊如下所示：  
 ```javascript
 #include ...
-(1). setup()
-(2). loop()
+1. setup()
+2. loop()
 (3). callback()
 (4). reconnect()
 (5). getAndSendSensorData()
 ```  
 (1),(2)為Arduino內建函式，(3),(4),(5)為自定義函式，各函式功能說明如下：  
 
-(1). 進入點 setup() 函式，做以下的動作  
-    * 初始化元件之library、Serial通訊、全域變數  
-    * 執行網路連線，判斷是否已連上網路  
+1. 進入點 setup() 函式，做以下的動作
+   * 初始化元件之library、Serial通訊、全域變數
+   * 執行網路連線，判斷是否已連上網路  
 
 (2). setup()執行完後會重複執行loop()函式，做以下動作  
     * 呼叫getAndSendSensorData()函式  
