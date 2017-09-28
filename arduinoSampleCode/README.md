@@ -46,11 +46,13 @@ Arduino的範例程式碼區塊如下所示：
 
 4. /* defines and variable for sensor/control mode [Start] */ 區塊
    定義變數或switch case，例：
+   ```arduino
    #define LEDW_OFF 0  // White LED off
    #define LEDW_ON 1  // White LED on
    #define LEDR_OFF 2  // Red LED off
    #define LEDR_ON 3  // Red LED on
    int ledCase = -1;
+   ```
 
 5. /* Initialize sensor/control object [Start] */ 區塊
    初始化裝置物件，例：
