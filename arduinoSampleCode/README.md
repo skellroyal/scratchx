@@ -72,12 +72,11 @@ Arduino的範例程式碼區塊如下所示：
    根據接收到的訊息topic和message內容設定對應的switch case，例：  
    我們分別定義了紅光LED和白光LED的主題，在接收到對應主題的訊息後，進一步查看訊息的內容為1或0。  
    若是白光LED主題且訊息內容為1，則會把ledCase設為LEDW_ON(其值為1)，當loop()函式內判斷switch case時，就會進入開啟白光LED的case，並由Arduino控制將白光LED打開。  
-   
    ```javascript
    if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {
-       ledCase = LEDW_OFF;
+       ledCase = LEDW_OFF;
    } else if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '1') {
-       ledCase = LEDW_ON;
+       ledCase = LEDW_ON;
    } else if (topicString.equals(LEDR_TOPIC) && (char)payload[0] == '0') {
        ledCase = LEDR_OFF;
    } else if (topicString.equals(LEDR_TOPIC) && (char)payload[0] == '1') {
@@ -90,22 +89,22 @@ Arduino的範例程式碼區塊如下所示：
    假設ledCase被設成1，則會進入第2個case，由Arduino控制將白光LED打開。  
    ```javascript
    switch (ledCase) {
-      case LEDW_OFF:
-         // light should be off
-         digitalWrite(LEDW_PIN, LOW);
-         break;
-      case LEDW_ON:
-         // light should be on
-         digitalWrite(LEDW_PIN, HIGH);
-         break;
-      case LEDR_OFF:
-         // light should be off
-         digitalWrite(LEDR_PIN, LOW);
-         break;
-      case LEDR_ON:
-         // light should be on
-         digitalWrite(LEDR_PIN, HIGH);
-         break;
+       case LEDW_OFF:
+           // light should be off
+           digitalWrite(LEDW_PIN, LOW);
+           break;
+       case LEDW_ON:
+           // light should be on
+           digitalWrite(LEDW_PIN, HIGH);
+           break;
+       case LEDR_OFF:
+           // light should be off
+           digitalWrite(LEDR_PIN, LOW);
+           break;
+       case LEDR_ON:
+           // light should be on
+           digitalWrite(LEDR_PIN, HIGH);
+           break;
    }
    ```
 
