@@ -6,22 +6,22 @@ Source: https://store.arduino.cc/usa/arduino-yun*/-->
 Arduino的範例程式碼區塊如下所示：  
 ```javascript
 #include ...
-(1) setup()
-(2) loop()
-(3) callback()
-(4) reconnect()
-(5) getAndSendSensorData()
+(1). setup()
+(2). loop()
+(3). callback()
+(4). reconnect()
+(5). getAndSendSensorData()
 ```  
 (1),(2)為Arduino內建函式，(3),(4),(5)為自定義函式，各函式功能說明如下：  
 
-(1) 進入點 setup() 函式，做以下的動作  
-    • 初始化元件之library、Serial通訊、全域變數  
-    • 執行網路連線，判斷是否已連上網路  
+(1). 進入點 setup() 函式，做以下的動作  
+    * 初始化元件之library、Serial通訊、全域變數  
+    * 執行網路連線，判斷是否已連上網路  
 
-(2) setup()執行完後會重複執行loop()函式，做以下動作  
-    • 呼叫getAndSendSensorData()函式  
-    • 判斷是否連線到MQTT broker  
-    • 依照switch case的case值，設定元件的狀態(ex: 開led, 關led)  
+(2). setup()執行完後會重複執行loop()函式，做以下動作  
+    * 呼叫getAndSendSensorData()函式  
+    * 判斷是否連線到MQTT broker  
+    * 依照switch case的case值，設定元件的狀態(ex: 開led, 關led)  
     
 (3) 當訂閱的主題有訊息送達時，callback()函式會被呼叫  
     • 印出接收到的主題與訊息內容  
@@ -88,7 +88,7 @@ Arduino的範例程式碼區塊如下所示：
    根據switch case設定致動器，例：  
    假設ledCase被設成1，則會進入第2個case，由Arduino控制將白光LED打開。  
    ```javascript
-   switch (ledCase) {
+   switch (ledCase) {
        case LEDW_OFF:
            // light should be off
            digitalWrite(LEDW_PIN, LOW);
