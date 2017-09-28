@@ -59,13 +59,13 @@ Arduino的範例程式碼區塊如下所示：
 5. /\* Initialize sensor/control object [Start] \*/ 區塊  
    初始化裝置物件，例：  
    ```javascript  
-   DHT dht(DHTPIN, DHTTYPE);  `// DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)  `
+   DHT dht(DHTPIN, DHTTYPE);  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)  
    ```  
 
 6. /\* initialize sensor and actuator [Start] \*/ 區塊  
    初始化裝置，例：  
    ```javascript  
-   dht.begin();  `// DHT11溫濕度計(搜尋關鍵字:\"裝置的型號\" \"arduino\"可找到程式語法)  `
+   dht.begin();  // DHT11溫濕度計(搜尋關鍵字:\"裝置的型號\" \"arduino\"可找到程式語法)  
    ```  
 
 7. /\* Process received topic / message and set sensor/control mode [Start] \*/ 區塊  
