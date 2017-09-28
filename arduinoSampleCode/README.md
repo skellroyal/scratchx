@@ -58,32 +58,30 @@ Arduino的範例程式碼區塊如下所示：
 
 5. /\* Initialize sensor/control object [Start] \*/ 區塊  
    初始化裝置物件，例：DHT11溫濕度計\(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法\)  
-   
-   ```javascript
-   DHT dht(DHTPIN, DHTTYPE);
+   ```javascript
+   DHT dht(DHTPIN, DHTTYPE);
    ```
-
+   
 6. /\* initialize sensor and actuator [Start] \*/ 區塊  
    初始化裝置，例：// DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)  
+   ```javascript
+   dht.begin();
+   ```
    
-   ```javascript  
-   dht.begin();
-   ```  
-
 7. /\* Process received topic / message and set sensor/control mode [Start] \*/ 區塊  
    根據接收到的訊息topic和message內容設定對應的switch case，例：  
    我們分別定義了紅光LED和白光LED的主題，在接收到對應主題的訊息後，進一步查看訊息的內容為1或0。  
    若是白光LED主題且訊息內容為1，則會把ledCase設為LEDW_ON(其值為1)，當loop()函式內判斷switch case時，就會進入開啟白光LED的case，並由Arduino控制將白光LED打開。  
    
-   ```javascript  
-   if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {  
-      ledCase = LEDW_OFF;
+   ```javascript
+   if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {
+       ledCase = LEDW_OFF;
    } else if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '1') {
-      ledCase = LEDW_ON;
+       ledCase = LEDW_ON;
    } else if (topicString.equals(LEDR_TOPIC) && (char)payload[0] == '0') {
-      ledCase = LEDR_OFF;
+       ledCase = LEDR_OFF;
    } else if (topicString.equals(LEDR_TOPIC) && (char)payload[0] == '1') {
-      ledCase = LEDR_ON;
+       ledCase = LEDR_ON;
    }
    ```
 
