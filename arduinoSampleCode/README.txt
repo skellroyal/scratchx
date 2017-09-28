@@ -51,16 +51,17 @@ https://github.com/skellroyal/scratchx/blob/gh-pages/arduinoSampleCode/sample_yu
    int ledCase = -1;
 
 5. /* Initialize sensor/control object [Start] */ 區塊
-   初始化裝置物件，例：
-   DHT dht(DHTPIN, DHTTYPE);
+   初始化裝置物件，例：
+   DHT dht(DHTPIN, DHTTYPE);  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)
 
 6. /* initialize sensor and actuator [Start] */ 區塊
    初始化裝置，例：
-   dht.begin();
+   dht.begin();  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)
 
 7. /* Process received topic / message and set sensor/control mode [Start] */ 區塊
    根據接收到的訊息topic和message內容設定對應的switch case，例：
-   if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {
+   我們定義了紅光LED和白光LED分別對應的主題，所以在接收到對應主題的訊息後，進一步查看訊息的內容為1或0，若是白光LED主題且訊息內容為1，則會把ledCase設為LEDW_ON(其值為1)，當loop()函式內判斷switch case時，就會進入開啟白光LED的case，並由Arduino控制將白光LED打開。
+   if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '0') {
       ledCase = LEDW_OFF;
    } else if (topicString.equals(LEDW_TOPIC) && (char)payload[0] == '1') {
       ledCase = LEDW_ON;
