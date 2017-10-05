@@ -36,13 +36,10 @@ https://github.com/skellroyal/scratchx/blob/gh-pages/arduinoSampleCode/sample_yu
 
 1. 程式碼的最前面需要 include 裝置所需的library
 
-2. 變數 ssid 填入欲連線無線網路之SSID名稱
-   變數 pass 填入欲連線無線網路之密碼
-
-3. /* Define sensor / actuator pin and library [Start] */ 區塊
+2. /* Define sensor / actuator pin and library [Start] */ 區塊
    修改連接的裝置對應之PIN腳號碼
 
-4. /* defines and variable for sensor/control mode [Start] */ 區塊
+3. /* defines and variable for sensor/control mode [Start] */ 區塊
    定義變數或switch case，例：
    #define LEDW_OFF 0  // White LED off
    #define LEDW_ON 1  // White LED on
@@ -50,15 +47,15 @@ https://github.com/skellroyal/scratchx/blob/gh-pages/arduinoSampleCode/sample_yu
    #define LEDR_ON 3  // Red LED on
    int ledCase = -1;
 
-5. /* Initialize sensor/control object [Start] */ 區塊
+4. /* Initialize sensor/control object [Start] */ 區塊
    初始化裝置物件，例：
    DHT dht(DHTPIN, DHTTYPE);  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)
 
-6. /* initialize sensor and actuator [Start] */ 區塊
+5. /* initialize sensor and actuator [Start] */ 區塊
    初始化裝置，例：
    dht.begin();  // DHT11溫濕度計(搜尋關鍵字:"裝置的型號" "arduino"可找到程式語法)
 
-7. /* Process received topic / message and set sensor/control mode [Start] */ 區塊
+6. /* Process received topic / message and set sensor/control mode [Start] */ 區塊
    根據接收到的訊息topic和message內容設定對應的switch case，例：
    我們分別定義了紅光LED和白光LED的主題，在接收到對應主題的訊息後，進一步查看訊息的內容為1或0。
    若是白光LED主題且訊息內容為1，則會把ledCase設為LEDW_ON(其值為1)，當loop()函式內判斷switch case時，就會進入開啟白光LED的case，並由Arduino控制將白光LED打開。
@@ -72,7 +69,7 @@ https://github.com/skellroyal/scratchx/blob/gh-pages/arduinoSampleCode/sample_yu
       ledCase = LEDR_ON;
    }
 
-8. /* Set actuator status according to sensor/control mode [Start] */ 區塊
+7. /* Set actuator status according to sensor/control mode [Start] */ 區塊
    根據switch case設定致動器，例：
    假設ledCase被設成1，則會進入第2個case，由Arduino控制將白光LED打開。
    switch (ledCase) {
@@ -94,11 +91,11 @@ https://github.com/skellroyal/scratchx/blob/gh-pages/arduinoSampleCode/sample_yu
          break;
    }
 
-9. /* Reading sensor data [Start] */ 區塊
+8. /* Reading sensor data [Start] */ 區塊
    讀取感測器的數值，例：
    float t = dht.readTemperature();
    float h = dht.readHumidity();
 
-10./* Publish sensor data to sensor topics [Start] */ 區塊
+9. /* Publish sensor data to sensor topics [Start] */ 區塊
    發送感測器的值到對應的主題，例：
    client.publish(DHT11_TEMP_TOPIC, attributes);
